@@ -21,6 +21,7 @@
   "scripts": {
     "lint": "eslint --fix src/**",
     "build": "rollup -c",
+    "heroku-postbuild": "rollup -c",
     "pretest": "rollup -c rollup.config.test.js",
     "test": "node ./test/test.js"
   },
@@ -47,5 +48,9 @@
     "rollup-plugin-eslint": "^4.0.0",
     "rollup-plugin-uglify": "^4.0.0",
     "tape": "^4.9.1"
+  },
+  "engines" : {
+    "npm": "~6.4.1",
+    "node": "v8.12.0"
   }
 }
