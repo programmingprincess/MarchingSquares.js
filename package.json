@@ -1,4 +1,5 @@
-name": "marchingsquares",
+{
+  "name": "marchingsquares",
   "description": "MarchingSquaresJS - An implementation of the Marching Squares algorithm featuring Isocontour and Isoband computation.",
   "version": "1.3.2",
   "author": "Ronny Lorenz <ronny@tbi.univie.ac.at>",
@@ -40,7 +41,7 @@ name": "marchingsquares",
     "isoband",
     "isoline"
   ],
-  "dependencies": {
+  "devDependencies": {
     "eslint": "5.0.1",
     "load-json-file": "^2.0.0",
     "rollup": "^0.60.7",
