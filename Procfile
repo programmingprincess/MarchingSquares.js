@@ -1,0 +1,1 @@
+web: pm run-script build
