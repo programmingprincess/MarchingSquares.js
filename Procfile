@@ -1,1 +1,1 @@
-web: npm install marchingsquares
+web: npm run-script build
