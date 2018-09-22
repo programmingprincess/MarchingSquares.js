@@ -49,7 +49,7 @@
     "rollup-plugin-uglify": "^4.0.0",
     "tape": "^4.9.1"
   },
-  "engines" : {
+  "engines": {
     "npm": "~6.4.1",
     "node": "v8.12.0"
   }
