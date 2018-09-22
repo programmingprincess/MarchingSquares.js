@@ -25,7 +25,7 @@ export default [
       format: 'es',
       banner: license
     },
-    plugins: [ eslint() ]
+   // plugins: [ eslint() ]
   },
   {
     input: 'src/main.js',
