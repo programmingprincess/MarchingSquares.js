@@ -1,1 +1,1 @@
-web: pm run-script build
+web: npm run-script build
