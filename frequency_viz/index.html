@@ -6,29 +6,41 @@
 
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="../dist/marchingsquares-isolines.js"></script>
+    <style>
+        .isocontours svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
 
 </head>
 <body>
 
-<div id="isocontours"></div>
+<div id="isocontours" class = "isocontours"></div>
 
 <script>
+    var colorRanges =
+        [[d3.rgb(191, 211, 205), d3.rgb(181, 222, 208), d3.rgb(112, 211, 179), d3.rgb(89, 213, 172)],
+         [d3.rgb(255, 170, 170), d3.rgb(212, 106, 106), d3.rgb(128, 21, 21), d3.rgb(85, 0, 0)],
+         [d3.rgb(255, 230, 21), d3.rgb(227, 203, 0), d3.rgb(120, 107, 0), d3.rgb(44, 39, 0)]];
 
-    var intervals = [0,0.6];
+
+    var intervals = [0,0.4,0.6];
 
     var input = [
-        [0.3, 0.2],
-        [0.3, 0.4],
-        [0.3, 0.3],
-        [0.3, 0.2],
-        [0.7, 0.2],
-        [0.3, 0.1],
-        [0.3, 0.2],
-        [0.7, 0.2],
-        [0.3, 0.3],
-        [0.3, 0.0],
-        [0.3, 0.2],
-        [0.3, 0.1],
+        [0.3, 0.2, 0.1],
+        [0.3, 0.2, 0.3],
+        [0.3, 0.2, 0.8],
+        [0.3, 0.2, 0.4],
+        [0.7, 0.2, 0.6],
+        [0.3, 0.7, 0.1],
+        [0.3, 0.2, 0.2],
+        [0.7, 0.2, 0.1],
+        [0.3, 0.9, 0.3],
+        [0.3, 0.2, 0.2],
+        [0.3, 0.2, 0.1],
+        [0.3, 0.2, 0.3],
     ];
 
     // rows = 12
@@ -40,19 +52,6 @@
 
     var size = input.length;
     var temp = []
-
-    //turn vector (a column in input) into matrix 
-    for(var i = 0; i < size; i++) {
-        if(i!=0 && i%m == 0) {
-            grid.push(temp);
-            temp = [];
-            console.log(i)
-        }
-        temp.push(input[i][0]);
-    }
-    grid.push(temp);
-
-
     /*var data = [
         [0.3, 0.3, 0.3],
         [0.3, 0.7, 0.3],
@@ -60,8 +59,26 @@
         [0.3, 0.3, 0.3],
     ];*/
 
-    var xs = d3.range(0, grid[0].length);
-    var ys = d3.range(0, grid.length);
+
+    for(var index = 0; index < input[0].length; index++) {
+
+
+    var grid = [];
+    temp = [];
+
+    for(var i = 0; i < size; i++) {
+        if(i!=0 && i%m == 0) {
+            grid.push(temp);
+            temp = [];
+        }
+        temp.push(input[i][index]);
+    }
+    grid.push(temp);
+
+
+
+    var x = d3.range(0, grid[0].length);
+    var y = d3.range(0, grid.length);
 
     var isoLines = [];
     MarchingSquaresJS
@@ -79,35 +96,37 @@
           "val": intervals[i]});
       });
 
-    drawLines('#isocontours', isoLines, intervals);
+      // 
+
+    drawLines('#isocontours', isoLines, intervals, x, y);
 
 
-    // helper function
-    function drawLines(divId, lines, intervals) {
 
-        var marginBottomLabel = 0;
+        // helper function
+        function drawLines(divId, lines, intervals, xs, ys) {
 
-        var width = 300;
-        var height = width * (ys.length / xs.length);
+            var marginBottomLabel = 0;
 
-        var xScale = d3.scale.linear()
+            var width = 400;
+            var height = width * (ys.length / xs.length);
+
+            var xScale = d3.scale.linear()
                 .range([0, width])
                 .domain([Math.min.apply(null, xs), Math.max.apply(null, xs)]);
 
-        var yScale = d3.scale.linear()
+            var yScale = d3.scale.linear()
                 .range([0, height])
                 .domain([Math.min.apply(null, ys), Math.max.apply(null, ys)]);
 
-        var colours = d3.scale.linear().domain([intervals[0], intervals[intervals.length - 1]])
-                .range([d3.rgb(0, 0, 0),
-                    d3.rgb(200, 200, 200)]);
+            var colours = d3.scale.linear().domain([intervals[0], intervals[intervals.length - 1]])
+                .range(colorRanges[index]);
 
-        var svg = d3.select(divId)
+            var svg = d3.select(divId)
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height + marginBottomLabel);
 
-        svg.selectAll("path")
+            svg.selectAll("path")
                 .data(lines)
                 .enter().append("path")
                 .style("fill", "none")
@@ -143,8 +162,10 @@
                     })
                     .style("stroke-width", 1);
                 });
-    }
+        }
 
+    }
+    
 </script>
 </body>
 </html>

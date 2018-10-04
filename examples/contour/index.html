@@ -27,9 +27,9 @@
       [0.0,   0.0,   0.0,   0.0, 0.0]
     ];
 
-    var xs = d3.range(0, data[0].length);
-    var ys = d3.range(0, data.length);
-
+    var x = d3.range(0, data[0].length);
+    var y = d3.range(0, data.length);
+debugger
     var isoLines = [];
     MarchingSquaresJS
       .isoLines(data,
@@ -46,11 +46,11 @@
           "val": intervals[i]});
       });
 
-    drawLines('#isocontours', isoLines, intervals);
+    drawLines('#isocontours', isoLines, intervals, x, y);
 
 
     // helper function
-    function drawLines(divId, lines, intervals) {
+    function drawLines(divId, lines, intervals, xs, ys) {
 
         var marginBottomLabel = 0;
 
@@ -67,7 +67,7 @@
 
         var colours = d3.scale.linear().domain([intervals[0], intervals[intervals.length - 1]])
                 .range([d3.rgb(0, 0, 0),
-                    d3.rgb(200, 200, 200)]);
+                    d3.rgb(Math.round(Math.random()*255), 200, 200)]);
 
         var svg = d3.select(divId)
                 .append("svg")

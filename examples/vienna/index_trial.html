@@ -24,7 +24,7 @@ div.tooltip {
 
 <div id="vienna"></div>
 
-<script src="vienna_data.js"></script>
+<script src="input.js"></script>
 <script>
     var useQuadTree = true;
     var intervals = []
@@ -35,23 +35,35 @@ div.tooltip {
     var isoLines  = [];
     var isoLines2 = [];
 
-    for (var i = 0; i < 256; i+=8) {
+    for (var i = 0; i < 1; i+=0.08) {
       intervals.push(i);
-      bandWidths.push(8);
+      bandWidths.push(0.08);
     }
 
     //more lines here = darker map bands
     //so these are acting as thresholds...i think 
 
-    for (var i = 16; i < 256; i+=16)
+    for (var i = 0.16; i < 1; i+=0.16)
       intervals_lines.push(i);
 
-    for (var i = 8; i < 256; i+=16)
+    for (var i = 0.08; i < 1; i+=0.08)
       intervals_lines2.push(i);
 
     data = d3.transpose(vienna_basin);
     var xs = d3.range(0, data[0].length);
     var ys = d3.range(0, data.length);
+
+    var grid = [];
+    var temp = [];
+    for(var i = 0; i < 12; i++) {
+        if(i!=0 && i%3 == 0) {
+            grid.push(temp);
+            temp = [];
+        }
+        temp.push(vienna_basin[i][0]);
+    }
+    grid.push(temp);
+
 
     var prepData  = data;
 
@@ -65,7 +77,7 @@ div.tooltip {
 debugger
     MarchingSquaresJS
       .isoBands(
-        prepData,
+        grid,
         intervals,
         bandWidths,
         { noQuadTree: !useQuadTree })
@@ -84,7 +96,7 @@ debugger
     /* iso line set A */
     MarchingSquaresJS
       .isoLines(
-        prepData,
+        grid,
         intervals_lines,
         { linearRing: false, noQuadTree: !useQuadTree })
       .forEach(function(c, i) {
@@ -98,7 +110,7 @@ debugger
     /* iso line set B */
     MarchingSquaresJS
       .isoLines(
-        prepData,
+        grid,
         intervals_lines2,
         { linearRing: false, noQuadTree: !useQuadTree })
       .forEach(function(c, i) {
@@ -149,6 +161,7 @@ debugger
                 .attr("width", width)
                 .attr("height", height + marginBottomLabel);
 
+        //fills and color
         svg.selectAll("path.bands")
                 .data(bands)
                 .enter().append("path")
