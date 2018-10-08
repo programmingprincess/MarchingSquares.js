@@ -12,12 +12,22 @@
             top: 0;
             left: 0;
         }
+
+        .frequency svg {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
     </style>
+    <!--start with svg
+        grab from dom everytime drawlines is called
+    -->
 
 </head>
 <body>
 
 <div id="isocontours" class = "isocontours"></div>
+<div id="frequency" class = "frequency"></div>
 
 <script>
     var colorRanges =
@@ -28,21 +38,20 @@
 
 /*
     var input = [
-        [0.3, 0.2, 0.1],
-        [0.3, 0.2, 0.3],
-        [0.3, 0.2, 0.8],
-        [0.3, 0.2, 0.4],
-        [0.7, 0.2, 0.6],
-        [0.3, 0.7, 0.1],
-        [0.3, 0.2, 0.2],
-        [0.7, 0.2, 0.1],
-        [0.3, 0.9, 0.3],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.1],
-        [0.3, 0.2, 0.3],
-    ];
-*/
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0.8],
+[0, 0, 0.4],
+[0.4, 0, 0.6],
+[0, 0.7, 0],
+[0.7, 0, 0],
+[0.7, 0, 0],
+[0, 0.9, 0],
+[0.7, 0, 0],
+[0.7, 0, 0],
+[0, 0, 0],];
 
+*/
 
     /*var input = [
         [0.3, 0.2, 0.1],
@@ -90,75 +99,102 @@
     // grid = 4 x 3 
     // n x m 
 
-    var intervals = [0,0.4,0.6, 0.8];
-
+    var intervals = [0,0.7];
+//TODO: make sure rows dont sum up to > 1
     var input = [
-        [0.3, 0.9, 0.2],
-        [0.3, 0.9, 0.2],
-        [0.3, 0.7, 0.2],
-        [0.3, 0.6, 0.2],
-        [0.3, 0.6, 0.2],
-        [0.3, 0.5, 0.2],
-        [0.3, 0.4, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.4, 0.2, 0.2],
-        [0.5, 0.2, 0.2],
-        [0.4, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.6],
-        [0.3, 0.2, 0.2],
-        [0.4, 0.2, 0.2],
-        [0.5, 0.2, 0.2],
-        [0.6, 0.2, 0.2],
-        [0.9, 0.2, 0.2],
-        [0.7, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.7],
-        [0.3, 0.2, 0.2],
-        [0.4, 0.2, 0.2],
-        [0.7, 0.2, 0.2],
-        [0.9, 0.2, 0.2],
-        [0.7, 0.2, 0.2],
-        [0.5, 0.2, 0.2],
-        [0.3, 0.2, 0.4],
-        [0.3, 0.2, 0.9],
-        [0.2, 0.2, 0.4],
-        [0.3, 0.2, 0.2],
-        [0.4, 0.2, 0.2],
-        [0.5, 0.2, 0.2],
-        [0.5, 0.2, 0.2],
-        [0.4, 0.2, 0.2],
-        [0.3, 0.2, 0.5],
-        [0.3, 0.2, 0.7],
-        [0.3, 0.2, 0.5],
-        [0.3, 0.2, 0.2],
-        [0.5, 0.2, 0.2],
-        [0.6, 0.2, 0.2],
-        [0.5, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.2],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0.7],
+[0, 0, 0.7],
+[0, 0, 0.7],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0.7, 0],
+[0, 0.7, 0],
+[0, 0.7, 0],
+[0, 0, 0],
+[0, 0, 0.7],
+[0, 0, 0.7],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0.7, 0],
+[0, 0, 0],
+[0, 0.7, 0],
+[0, 0.7, 0],
+[0, 0.7, 0],
+[0, 0.7, 0],
+[0, 0, 0],
+[0, 0, 0.6],
+[0, 0.7, 0],
+[0.7, 0, 0],
+[0.7, 0, 0],
+[0.7, 0, 0],
+[0, 0, 0],
+[0, 0.7, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0.7, 0],
+[0.7, 0, 0],
+[0.7, 0, 0],
+[0.7, 0, 0],
+[0, 0, 0],
+[0, 0.7, 0],
+[0, 0, 0.4],
+[0, 0, 0],
+[0, 0.7, 0],
+[0, 0.7, 0],
+[0, 0.7, 0],
+[0, 0.7, 0],
+[0, 0.7, 0],
+[0, 0.7, 0],
+[0, 0, 0.5],
+[0, 0, 0],
+[0, 0, 0.5],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0],
     ];
-    var grid = [];
+
+    //input represents u
+
+    var f = [];
+    for(var row = 0; row < input.length;row++) {
+        f[row] = new Array(3);
+    }
+
+    for(var row = 0; row < input.length;row++) {
+        for (var col = 0; col < input[0].length;col++) {
+            if (col == 0) {
+                num = input[row][0] + input[row][1] + input[row][2];
+                f[row][col] = num;
+            } else {
+                f[row][col] = input[row][col];    
+            }
+        }
+    }
+
+
     var m = 8;
     // 64 lines 
     // 8 x 8
@@ -172,46 +208,56 @@
         [0.3, 0.3, 0.3],
     ];*/
 
+for(var canvas=0; canvas < 2; canvas++) {
+    var div = "";
+    var matrix = input;
+    if(canvas==0){
+        matrix = input;
+        div = "#isocontours";
+    } else {
+        matrix = f;
+        div = "#frequency";
+    }
 
     for(var index = 0; index < input[0].length; index++) {
 
 
-    var grid = [];
-    temp = [];
+        var grid = [];
+        temp = [];
 
-    for(var i = 0; i < size; i++) {
-        if(i!=0 && i%m == 0) {
-            grid.push(temp);
-            temp = [];
+        for(var i = 0; i < size; i++) {
+            if(i!=0 && i%m == 0) {
+                grid.push(temp);
+                temp = [];
+            }
+            temp.push(matrix[i][index]);
         }
-        temp.push(input[i][index]);
-    }
-    grid.push(temp);
+        grid.push(temp);
+debugger
 
 
+        var x = d3.range(0, grid[0].length);
+        var y = d3.range(0, grid.length);
 
-    var x = d3.range(0, grid[0].length);
-    var y = d3.range(0, grid.length);
+        var isoLines = [];
+        MarchingSquaresJS
+          .isoLines(grid,
+                    intervals,
+                    {
+                        polygons: false,
+                        linearRing: false
+                    }
+          )
+          .forEach(function(isolines, i) {
+            isoLines.push({
+              "coords": isolines,
+              "level": i + 1,
+              "val": intervals[i]});
+          });
 
-    var isoLines = [];
-    MarchingSquaresJS
-      .isoLines(grid,
-                intervals,
-                {
-                    polygons: false,
-                    linearRing: false
-                }
-      )
-      .forEach(function(isolines, i) {
-        isoLines.push({
-          "coords": isolines,
-          "level": i + 1,
-          "val": intervals[i]});
-      });
+          // 
 
-      // 
-
-    drawLines('#isocontours', isoLines, intervals, x, y);
+        drawLines(div, isoLines, intervals, x, y);
 
 
 
@@ -278,6 +324,7 @@
         }
 
     }
+}
     
 </script>
 </body>
