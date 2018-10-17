@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Frequency Matrix Isolines</title>
 
+    <script type="text/javascript" src="input.json"></script>
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="../dist/marchingsquares-isolines.js"></script>
     <style>
@@ -11,12 +12,19 @@
             position: absolute;
             top: 0;
             left: 0;
+
         }
 
         .frequency svg {
             position: absolute;
             top: 0;
             right: 0;
+            display: none;
+        }
+        #test {
+            position: absolute;
+            top: 0;
+            left: 0;
         }
     </style>
     <!--start with svg
@@ -28,6 +36,7 @@
 
 <div id="isocontours" class = "isocontours"></div>
 <div id="frequency" class = "frequency"></div>
+<div id = "test">
 
 <script>
     var colorRanges =
@@ -36,153 +45,23 @@
          [d3.rgb(255, 230, 21), d3.rgb(227, 203, 0), d3.rgb(120, 107, 0), d3.rgb(44, 39, 0)]];
 
 
-/*
-    var input = [
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0.8],
-[0, 0, 0.4],
-[0.4, 0, 0.6],
-[0, 0.7, 0],
-[0.7, 0, 0],
-[0.7, 0, 0],
-[0, 0.9, 0],
-[0.7, 0, 0],
-[0.7, 0, 0],
-[0, 0, 0],];
+    var uThreshold = data.u_thresholds;
+    var fThreshold = data.f_thresholds;
+    var input = data.input;
+    //var uintervals = [0.25];
+    //var fintervals = [0.1];
 
-*/
-
-    /*var input = [
-        [0.3, 0.2, 0.1],
-        [0.3, 0.2, 0.3],
-        [0.3, 0.2, 0.3],
-        [0.3, 0.4, 0.4],
-        [0.3, 0.5, 0.3],
-        [0.3, 0.7, 0.1],
-        [0.3, 0.7, 0.2],
-        [0.3, 0.6, 0.1],
-        [0.3, 0.4, 0.3],
-        [0.3, 0.2, 0.2],
-        [0.3, 0.2, 0.1],
-        [0.3, 0.2, 0.4],
-        [0.3, 0.2, 0.6],
-        [0.3, 0.2, 0.7],
-        [0.3, 0.2, 0.5],
-        [0.3, 0.2, 0.3],
-        [0.3, 0.2, 0.3],
-        [0.3, 0.2, 0.3],
-        [0.4, 0.2, 0.3],
-        [0.5, 0.2, 0.3],
-        [0.7, 0.2, 0.1],
-        [0.7, 0.2, 0.3],
-        [0.5, 0.2, 0.3],
-        [0.4, 0.5, 0.4],
-        [0.3, 0.7, 0.3],
-        [0.2, 0.7, 0.4],
-        [0.5, 0.3, 0.3],
-        [0.7, 0.3, 0.1],
-        [0.5, 0.6, 0.3],
-        [0.7, 0.4, 0.2],
-        [0.3, 0.3, 0.1],
-        [0.3, 0.6, 0.3],
-        [0.3, 0.7, 0.3],
-        [0.3, 0.6, 0.3],
-        [0.3, 0.4, 0.3],
-        [0.7, 0.3, 0.3],
-        [0.3, 0.2, 0.3],
-        [0.3, 0.2, 0.3],
-        [0.3, 0.2, 0.3],
-        [0.3, 0.2, 0.3],
-    ];*/
-
-    // grid = 4 x 3 
-    // n x m 
-
-    var intervals = [0,0.7];
-//TODO: make sure rows dont sum up to > 1
-    var input = [
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0.7],
-[0, 0, 0.7],
-[0, 0, 0.7],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0.7, 0],
-[0, 0.7, 0],
-[0, 0.7, 0],
-[0, 0, 0],
-[0, 0, 0.7],
-[0, 0, 0.7],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0.7, 0],
-[0, 0, 0],
-[0, 0.7, 0],
-[0, 0.7, 0],
-[0, 0.7, 0],
-[0, 0.7, 0],
-[0, 0, 0],
-[0, 0, 0.6],
-[0, 0.7, 0],
-[0.7, 0, 0],
-[0.7, 0, 0],
-[0.7, 0, 0],
-[0, 0, 0],
-[0, 0.7, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0.7, 0],
-[0.7, 0, 0],
-[0.7, 0, 0],
-[0.7, 0, 0],
-[0, 0, 0],
-[0, 0.7, 0],
-[0, 0, 0.4],
-[0, 0, 0],
-[0, 0.7, 0],
-[0, 0.7, 0],
-[0, 0.7, 0],
-[0, 0.7, 0],
-[0, 0.7, 0],
-[0, 0.7, 0],
-[0, 0, 0.5],
-[0, 0, 0],
-[0, 0, 0.5],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0],
-    ];
 
     //input represents u
 
+    /* Initialize frequency matrix */
     var f = [];
     for(var row = 0; row < input.length;row++) {
         f[row] = new Array(3);
     }
 
+    /* Tree where mutation 1 and 2 are children of mutation 0
+       is hardcoded (col 1 is the same) */
     for(var row = 0; row < input.length;row++) {
         for (var col = 0; col < input[0].length;col++) {
             if (col == 0) {
@@ -194,32 +73,32 @@
         }
     }
 
-
+    /* Col size in visualized grid */
     var m = 8;
-    // 64 lines 
-    // 8 x 8
 
     var size = input.length;
-    var temp = []
-    /*var data = [
-        [0.3, 0.3, 0.3],
-        [0.3, 0.7, 0.3],
-        [0.3, 0.7, 0.3],
-        [0.3, 0.3, 0.3],
-    ];*/
+    var temp = [];
 
+/* One canvas for each*/
 for(var canvas=0; canvas < 2; canvas++) {
+
     var div = "";
     var matrix = input;
+    var intervals = uThreshold;
     if(canvas==0){
+        //matrix u 
         matrix = input;
         div = "#isocontours";
     } else {
+        //matrix f
         matrix = f;
         div = "#frequency";
+        intervals = fThreshold;
     }
 
+    /* Loop for each mutation (i.e., column in input matrix) */
     for(var index = 0; index < input[0].length; index++) {
+
 
 
         var grid = [];
@@ -233,7 +112,6 @@ for(var canvas=0; canvas < 2; canvas++) {
             temp.push(matrix[i][index]);
         }
         grid.push(temp);
-debugger
 
 
         var x = d3.range(0, grid[0].length);
@@ -325,7 +203,106 @@ debugger
 
     }
 }
+
+var width = 500;
+var height = width * (d3.range(0, grid.length).length / d3.range(0, grid[0].length).length);
+
+ 
+var gridGraph = d3.select("#test")
+    .append("svg:svg")
+    .attr("width", width)     // Set width of the SVG canvas
+    .attr("height", height);   // Set height of the SVG canvas
+ 
+ 
+// the yaxiscoorddata gives the y coordinates
+// for horizontal lines ("x1" = 25 and, "x2"=width-25)
+var yaxiscoorddata = d3.range(0, height, width/(m-1));
+ 
+// the xaxiscoorddata gives the x coordinates
+// for vertical lines ("y1" = 25 and, "y2"=height-25)
+var xaxiscoorddata = d3.range(0, width, width/(m-1));
+ 
+/*
+// Using the xaxiscoorddata to generate vertical lines.
+gridGraph.selectAll("line.vertical")
+.data(xaxiscoorddata)
+.enter().append("svg:line")
+.attr("x1", function(d){return d;})
+.attr("y1", 0)
+.attr("x2", function(d){return d;})
+.attr("y2", height)
+.style("stroke", "rgb(6,120,155)")
+.style("stroke-width", 0.5);       
+ 
+ 
+// Using the yaxiscoorddata to generate horizontal lines.       
+gridGraph.selectAll("line.horizontal")
+.data(yaxiscoorddata)
+.enter().append("svg:line")
+.attr("x1", 0)
+.attr("y1", function(d){return d;})
+.attr("x2", width)
+.attr("y2", function(d){return d;})
+.style("stroke", "rgb(6,120,155)")
+.style("stroke-width", 0.5);
+*/
+section = height/grid[0].length
+
+for(var i = 0; i < height+section; i+=section) {
+    gridGraph.selectAll("circle.vertical")
+    .data(yaxiscoorddata)
+    .enter().append("svg:circle")
+    .attr("cx", function(d){return d;})
+    .attr("cy", i)
+    .attr("r", 1)
+    //.style("stroke", "rgb(6,120,155)")
+    //.style("stroke-width", 8);  
+}
+
+
+// Select the DIV container "D3grid_D3way", then
+// add an SVG element to it
     
+/*var width = 500;
+var height = 400;
+ 
+var gridGraph = d3.select("#test")
+    .append("svg:svg")
+    .attr("width", width)     // Set width of the SVG canvas
+    .attr("height", height);   // Set height of the SVG canvas
+ */
+ 
+// the yaxiscoorddata gives the y coordinates
+// for horizontal lines ("x1" = 25 and, "x2"=width-25)
+//var yaxiscoorddata = d3.range(8, height, 25);
+ 
+// the xaxiscoorddata gives the x coordinates
+// for vertical lines ("y1" = 25 and, "y2"=height-25)
+//var xaxiscoorddata = d3.range(25, width, 25);
+ 
+ 
+// Using the xaxiscoorddata to generate vertical lines.
+/*gridGraph.selectAll("circle")
+.data(xaxiscoorddata)
+.enter().append("svg:circle")
+.attr("cx", function(d){return d;})
+.attr("cy", function(d){return d;})
+.attr("r", 1)*/
+//.style("stroke", "rgb(6,120,155)")
+//.style("stroke-width", 2);       
+ 
+ 
+// Using the yaxiscoorddata to generate horizontal lines.       
+/*gridGraph.selectAll("circle")
+.data(yaxiscoorddata)
+.enter().append("svg:circle")
+.attr("cx", 25)
+.attr("cy", function(d){return d;})
+.attr("r", 1)
+.style("stroke", "rgb(6,120,155)")
+.style("stroke-width", 2);*/
+
+
 </script>
 </body>
 </html>
